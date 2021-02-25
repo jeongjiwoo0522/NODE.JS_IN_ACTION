@@ -34,7 +34,7 @@ function register(method, pathname, params, cb) {
     const conncetion = mysql.createConnection(conn);
     conncetion.connect();
     conncetion.query(`INSERT INTO members (username, password) 
-    values (${params.username}, password(${params.password}));`, (error, results, fields) => {
+    values ("${params.username}", password("${params.password}"));`, (error, results, fields) => {
       if(error) {
         response.errorcode = 1;
         response.errormessage = error;
@@ -59,7 +59,7 @@ function inquiry(method, pathname, params, cb) {
     const connection = mysql.createConnection(conn);
     connection.connect();
     connection.query(`SELECT id FROM members WHERE 
-    username = ${params.username} AND password = password(${params.password});`, (error, result, fields) => {
+    username = "${params.username}" AND password = password("${params.password}");`, (error, result, fields) => {
       if(error || result.length == 0) {
         response.errorcode = 1;
         response.errormessage = error ? error : "Invalid password";
@@ -85,7 +85,7 @@ function unregister(method, pathname, params, cb) {
   } else {
     const connection = mysql.createConnection(conn);
     connection.connect();
-    connection.query(`DELETE FROM members WHERE username = ${params.username};`, (error, results, fields) => {
+    connection.query(`DELETE FROM members WHERE username = "${params.username}";`, (error, results, fields) => {
       if(error) {
         response.errorcode = 1;
         response.errormessage = error;
