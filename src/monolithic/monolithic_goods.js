@@ -44,3 +44,22 @@ function register(method, pathname, params, cb) {
     connection.end();
   }
 }
+
+function inquiry(method, pathname, params, cb) {
+  let response = {
+    errorcode: 0,
+    errormessage: "success",
+  };
+  const connection = mysql.createConnection(conn);
+  connection.connect();
+  connection.query("SELECT * FROM goods", (error, results, fields) => {
+    if(error || results.length == 0) {
+      response.errorcode = 1;
+      response.errormessage = error ? error : "no data";
+    } else {
+      response.results = results;
+    }
+    cb(response);
+  });
+  connection.end();
+}
