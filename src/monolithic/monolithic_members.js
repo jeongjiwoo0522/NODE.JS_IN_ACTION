@@ -71,3 +71,27 @@ function inquiry(method, pathname, params, cb) {
     connection.end();
   }
 }
+
+function unregister(method, pathname, params, cb) {
+  let response = {
+    key: params.key,
+    errorcode: 0,
+    errormessage: "success",
+  };
+  if(params.username == null) {
+    response.errorcode = 1;
+    response.errormessage = "Invalid Parameter";
+    cb(response);
+  } else {
+    const connection = mysql.createConnection(conn);
+    connection.connect();
+    connection.query(`DELETE FROM members WHERE username = ${params.username};`, (error, results, fields) => {
+      if(error) {
+        response.errorcode = 1;
+        response.errormessage = error;
+      } 
+      cb(response);
+    });
+    connection.end();
+  }
+}
