@@ -63,3 +63,28 @@ function inquiry(method, pathname, params, cb) {
   });
   connection.end();
 }
+
+function unregister(method, pathname, params, cb) {
+  let response = {
+    errorcode: 0,
+    errormessage: "success",
+  };
+  if(params.id == null) {
+    response.errorcode = 1;
+    response.errormessage = "Invalid Parameter";
+    cb(response);
+  } else {
+    const connection = mysql.createConnection(conn);
+    connection.connect();
+    connection.query("DELETE FROM goods WHERE id = ?", [
+      params.id,
+    ], (error, results, fields) => {
+      if(error) {
+        response.errorcode = 1;
+        response.errormessage = "error";
+      }
+      cb(response);
+    });
+    connection.end();
+  }
+}
