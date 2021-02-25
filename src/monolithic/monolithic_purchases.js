@@ -42,3 +42,32 @@ function register(method, pathname, params, cb) {
     connection.end();
   }
 }
+
+function inquiry(method, pathname, params, cb) {
+  let response = {
+    key: params.key,
+    errorcode: 0,
+    errormessage: "success",
+  };
+
+  if(params.userid == null) {
+    response.errorcode = 1;
+    response.errormessage = "Invalid Parameter";
+    cb(response);
+  } else {
+    const connection = mysql.createConnection(conn);
+    connection.connect();
+    connection.query("SELECT id, goodsid, date FROM purchases WHERE userid = ?", [
+      params.userid
+    ], (error, results, fields) => {
+      if(error) {
+        response.errorcode = 1;
+        response.errormessage = error;
+      } else {
+        response.results = results;
+      }
+      cb(response);
+    });
+    connection.end();
+  }
+}
