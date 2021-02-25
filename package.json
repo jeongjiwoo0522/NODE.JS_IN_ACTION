@@ -1,0 +1,22 @@
+{
+  "name": "node.js_in_action",
+  "version": "1.0.0",
+  "description": "NODE.JS MICROSERVICES IN ACTION",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeongjiwoo0522/NODE.JS_IN_ACTION.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeongjiwoo0522/NODE.JS_IN_ACTION/issues"
+  },
+  "homepage": "https://github.com/jeongjiwoo0522/NODE.JS_IN_ACTION#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
