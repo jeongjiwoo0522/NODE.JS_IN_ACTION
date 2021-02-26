@@ -38,7 +38,6 @@ class TcpServer {
       console.log("listen", this.server.address());
     });
   }
-
   onCreate(socket) {
     console.log("onCreate", socket.remoteAddress, socket.remotePort);
   }
@@ -77,5 +76,6 @@ class TcpServer {
     });
   }
 }
+
 
 module.exports = TcpServer;
