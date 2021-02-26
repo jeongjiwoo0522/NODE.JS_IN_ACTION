@@ -46,6 +46,36 @@ class tcpServer {
   onClose(socket) {
     console.log("onClose", socket.remoteAddress, socket.remotePort);
   }
+
+  connectToDistributor(host, port, onNoti) {
+    const packet = {
+      uri: "/distributes",
+      method: "POST",
+      key: 0,
+      params: this.context,
+    };
+    let isConnectedDistributor = false;
+
+    this.clientDistributor = new tcpClient(host, port, 
+    (option) => {
+      isConnectedDistributor = true;
+      this.clientDistributor.write(packet);
+    }, 
+    (options, data) => { 
+      onNoti(data); 
+    }, 
+    (options) => {
+      isConnectedDistributor = false;
+    },
+    (options) => {
+      isConnectedDistributor = false;
+    });
+    setInterval(() => {
+      if(isConnectedDistributor !== false) {
+        this.clientDistributor.connect();
+      }
+    });
+  }
 }
 
 module.exports = tcpServer;
