@@ -113,7 +113,10 @@ function onCreateClient(optoins) {
 }
 
 function onReadClient(options, packet) {
-
+  console.log("onReadClient", packet);
+  mapResponse[packet.key].writeHead(200, { "Content-Type": "application/json" });
+  mapResponse[packet.key].end(JSON.stringify(packet));
+  delete mapResponse[packet.key];
 }
 
 function onEndClient(options) {
