@@ -19,6 +19,17 @@ class Distributor extends TcpServer {
     this.sendInfo();
   }
 
+  onRead(socket, json) {
+    const key = `${socket.remoteAddress}:${socket.remotePort}`;
+    console.log("onClose", socket.remoteAddress, socket.remotePort);
+    if(json.url === "distributes" && json.method === "POST") {
+      map[key] = { socket };
+      map[key].info = json.params;
+      map[key].info.host = socket.remoteAddress;
+      this.sendInfo();
+    }
+  }
+
   write(socket, packet) {
     socket.write(JSON.stringify(packet) + "@");
   }
