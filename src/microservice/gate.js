@@ -70,7 +70,23 @@ const server = http.createServer((req, res) => {
 });
 
 function onRequest(res, method, pathname, params) {
-
+  const key = method + pathname;
+  const client = mapUrls[key];
+  if(client == null) {
+    res.writeHead(404);
+    res.end();
+    return;
+  } else {
+    params.key = index;
+    const packet = { uri: pathname, method, params };
+    mapResponse[index] = res;
+    index++;
+    if(mapRR[key] == null) {
+      mapRR[key] = 0;
+    }
+    mapRR[key]++;
+    client[mapRR[key] % client.length].write(packet);
+  }
 }
 
 function onDistribute(data) {
