@@ -1,9 +1,9 @@
 "use strict";
 
 const net = require("net");
-const tcpClient = require("./client");
+const TcpClient = require("./client");
 
-class tcpServer {
+class TcpServer {
   constructor(name, port, urls) {
     this.context = { port, name, urls };
     this.merge = {};
@@ -56,7 +56,7 @@ class tcpServer {
     };
     let isConnectedDistributor = false;
 
-    this.clientDistributor = new tcpClient(host, port, 
+    this.clientDistributor = new TcpClient(host, port, 
     (option) => {
       isConnectedDistributor = true;
       this.clientDistributor.write(packet);
@@ -78,4 +78,4 @@ class tcpServer {
   }
 }
 
-module.exports = tcpServer;
+module.exports = TcpServer;

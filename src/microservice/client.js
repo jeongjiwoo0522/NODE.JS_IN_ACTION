@@ -2,7 +2,7 @@
 
 const net = require("net");
 
-class tcpClient {
+class TcpClient {
   constructor(host, port, onCreate, onRead, onEnd, onError) {
     this.options = { host, port };
     this.onCreate = onCreate;
@@ -46,4 +46,4 @@ class tcpClient {
   }
 }
 
-module.exports = tcpClient;
+module.exports = TcpClient;
