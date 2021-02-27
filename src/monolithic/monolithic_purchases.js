@@ -1,6 +1,12 @@
 const mysql = require("mysql");
 const conn = require("../config");
 
+const redis = require("redis").createClient();
+
+redis.on("error", (err) => {
+  console.log("Redis Error", err);
+});
+
 exports.onRequest = (res, method, pathname, params, cb) => {
   switch (method) {
     case "POST":
@@ -28,18 +34,25 @@ function register(method, pathname, params, cb) {
     response.errormessage = "Invalid Parameter";
     cb(response);
   } else {
-    const connection = mysql.createConnection(conn);
-    connection.connect();
-    connection.query("INSERT INTO purchases(userid, goodsid) VALUES (?, ?)", [
-      params.userid, params.goodsid
-    ], (error, results, fields) => {
-      if(error) {
+    redis.get(params.goodsid, (err, result) => {
+      if(err || result == null) {
         response.errorcode = 1;
-        response.errormessage = error;
-      } 
-      cb(response);
+        response.errormessage = "Redis filure";
+        return cb(response);
+      }
+      const connection = mysql.createConnection(conn);
+      connection.connect();
+      connection.query("INSERT INTO purchases(userid, goodsid) VALUES (?, ?)", [
+        params.userid, params.goodsid
+      ], (error, results, fields) => {
+        if(error) {
+          response.errorcode = 1;
+          response.errormessage = error;
+        } 
+        cb(response);
+      });
+      connection.end();
     });
-    connection.end();
   }
 }
 
