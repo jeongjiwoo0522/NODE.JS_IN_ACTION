@@ -1,6 +1,12 @@
 const mysql = require("mysql");
 const conn = require("../config");
 
+const redis = require("redis").createClient();
+
+redis.on("error", (err) => {
+  console.log("Redis Error", err);
+});
+
 exports.onRequest = (res, method, pathname, params, cb) => {
   switch (method) {
     case "POST":
@@ -33,12 +39,16 @@ function register(method, pathname, params, cb) {
   } else {
     const connection = mysql.createConnection(conn);
     connection.connect();
-    connection.query("INSERT INTO goods(name, category, price, description) VALUES (?, ?, ?, ?)", [
+    connection.query(`INSERT INTO goods(name, category, price, description) 
+                      VALUES (?, ?, ?, ?); SELECT LAST_INSERT_ID as id`, [
       params.name, params.category, params.price, params.description
     ], (error, result, fields) => {
       if(error) {
         response.errorcode = 1;
         response.errormessage = "error";
+      } else {
+        const id = result[1][0].id;
+        redis.set(id, JSON.stringify(params));
       }
       cb(response);
     });
@@ -85,6 +95,8 @@ function unregister(method, pathname, params, cb) {
       if(error) {
         response.errorcode = 1;
         response.errormessage = "error";
+      } else {
+        redis.del(params.id);
       }
       cb(response);
     });

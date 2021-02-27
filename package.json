@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jeongjiwoo0522/NODE.JS_IN_ACTION#readme",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "redis": "^3.0.2"
   }
 }
