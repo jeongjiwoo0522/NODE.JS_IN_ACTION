@@ -93,15 +93,15 @@ function onDistribute(data) {
   for (let n in data.params) {
     const node = data.params[n];
     const key = `${node.host}:${node.port}`;
-    if(mapclients[key] == null && node.name !== "gate") {
+    if(mapClients[key] == null && node.name !== "gate") {
       const client = new TcpClient(node.host, node.port, onCreateClient, onReadClient, onEndClient, onErrorClinet);
       mapClients[key] = { client, info: node };
       for(let m in node.urls) {
         const prop = node.urls[m];
         if(mapUrls[prop] == null) {
-          mapUrls[key] = [];
+          mapUrls[prop] = [];
         }
-        mapUrls[key].push(client);
+        mapUrls[prop].push(client);
       }
       client.connect();
     } 
