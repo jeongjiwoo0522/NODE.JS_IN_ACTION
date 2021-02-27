@@ -1,5 +1,6 @@
 "use strict";
 
+const cluster = require("cluster");
 const business = require("../monolithic/monolithic_goods");
 const Server = require("../distributes/server");
 
@@ -19,4 +20,13 @@ class Goods extends Server {
   }
 }
 
-new Goods();
+if(cluster.isMaster) {
+  cluster.fork();
+
+  cluster.on("exit", (worker) => {
+    console.log(`worker ${worker.process.pid} died`);
+    cluster.fork(); // failover & fault tolerant
+  });
+} else {
+  new Goods();
+}
