@@ -70,10 +70,10 @@ class TcpServer {
       isConnectedDistributor = false;
     });
     setInterval(() => {
-      if(isConnectedDistributor !== false) {
+      if(!isConnectedDistributor) {
         this.clientDistributor.connect();
       }
-    });
+    }, 3000);
   }
 }
 

@@ -4,7 +4,7 @@ const map = {};
 
 class Distributor extends TcpServer {
   constructor() {
-    super("distributor", 9000, ["POST/distributor", "GET/distributor"]);
+    super("distributor", 9000, ["POST/distributes", "GET/distributes"]);
   }
 
   onCreaet(socket) {
@@ -21,8 +21,8 @@ class Distributor extends TcpServer {
 
   onRead(socket, json) {
     const key = `${socket.remoteAddress}:${socket.remotePort}`;
-    console.log("onClose", socket.remoteAddress, socket.remotePort);
-    if(json.url === "distributes" && json.method === "POST") {
+    console.log("onRead", socket.remoteAddress, socket.remotePort, json);
+    if(json.uri === "/distributes" && json.method === "POST") {
       map[key] = { socket };
       map[key].info = json.params;
       map[key].info.host = socket.remoteAddress;
