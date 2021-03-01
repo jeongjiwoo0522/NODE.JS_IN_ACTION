@@ -5,6 +5,7 @@ const TcpClient = require("./client");
 
 class TcpServer {
   constructor(name, port, urls) {
+    this.logTcpClinet = null;
     this.context = { port, name, urls };
     this.merge = {};
     this.server = net.createServer((socket) => {
@@ -26,6 +27,7 @@ class TcpServer {
           } else if(arr[n] == "") {
             break;
           } else {
+            this.writeLog(arr[n]);
             this.onRead(socket, JSON.parse(arr[n]));
           }
         }
@@ -61,6 +63,15 @@ class TcpServer {
       this.clientDistributor.write(packet);
     }, 
     (options, data) => { 
+      if(this.logTcpClinet == null && this.context.name !== "logs") {
+        for(let n in data.params) {
+          const ms = data.params[n];
+          if(ms.name == "logs") {
+            this.connectToLog(ms.host, ms.port);
+            break;
+          }
+        }
+      }
       onNoti(data); 
     }, 
     (options) => {
@@ -74,6 +85,26 @@ class TcpServer {
         this.clientDistributor.connect();
       }
     }, 3000);
+  }
+
+  connectToLog(host, port) {
+    this.logTcpClinet = new TcpClient(host, port,
+      (options) => {}, (options) => { this.logTcpClinet = null }, (options) => { this.logTcpClinet = null });
+    this.logTcpClinet.connect();
+  }
+
+  writeLog(log) {
+    if(this.logTcpClinet) {
+      const packet = {
+        uri: "/logs",
+        method: "POST",
+        key: 0,
+        params: log
+      };
+      this.logTcpClinet.write(packet);
+    } else {
+      console.log(log);
+    }
   }
 }
 

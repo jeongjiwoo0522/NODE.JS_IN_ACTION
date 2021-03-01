@@ -5,7 +5,7 @@ const Server = require("../distributes/server");
 
 class Logs extends Server {
   constructor() {
-    super("logs", process.argv[2] ? +process.argv[2] : 9040, ["POST.logs"]);
+    super("logs", process.argv[2] ? +process.argv[2] : 9040, ["POST/logs"]);
   }
 
   onRead(socket, data) {
